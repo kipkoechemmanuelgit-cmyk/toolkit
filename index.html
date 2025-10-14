@@ -3,127 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecurityChat Pro - Tools & Messaging</title>
+    <title>SecureChat - Messaging & Security Tools</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FF6B35">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#25D366">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- App Container -->
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
-            <div class="header-content">
-                <div class="logo">⚡</div>
-                <h1>SecurityChat Pro</h1>
-                <div class="user-info">
-                    <span id="usernameDisplay">Guest</span>
-                    <button id="loginBtn" class="btn-secondary">Login</button>
-                </div>
+            <div class="header-left">
+                <div class="app-logo">💬</div>
+                <h1>SecureChat</h1>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn" id="toolsBtn" title="Security Tools">🛠</button>
+                <button class="icon-btn" id="menuBtn" title="Menu">⋮</button>
             </div>
         </header>
 
-        <!-- Main App -->
-        <main class="app-main">
-            <!-- Tools Section -->
-            <section id="toolsSection" class="section active">
-                <div class="section-header">
-                    <h2>Security Tools</h2>
-                    <button class="btn-primary" id="openChatBtn">
-                        💬 Open Chat
-                    </button>
+        <!-- Chat Interface -->
+        <main class="chat-main">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-content">
+                    <div class="welcome-icon">💬</div>
+                    <h2>Welcome to SecureChat</h2>
+                    <p>Secure messaging with professional security tools</p>
+                    <button class="primary-btn" id="getStartedBtn">Get Started</button>
                 </div>
+            </div>
 
-                <div class="tools-grid" id="toolsGrid">
-                    <!-- Tools will be loaded here -->
-                </div>
-
-                <!-- Bundle Offer -->
-                <div class="bundle-card">
-                    <div class="bundle-content">
-                        <h3>Complete Toolkit + Messaging</h3>
-                        <p>Get all tools and unlimited messaging access</p>
-                        <div class="price">KSH 499<span>/month</span></div>
-                        <button class="btn-primary" id="bundleOfferBtn">
-                            💎 Get Full Access
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Chat Section -->
-            <section id="chatSection" class="section">
-                <div class="chat-header">
-                    <button class="btn-secondary" id="backToToolsBtn">
-                        ← Back to Tools
-                    </button>
-                    <h3>Secure Messaging</h3>
-                    <div class="online-indicator">
-                        <span id="onlineCount">0</span> online
+            <!-- Chat Screen -->
+            <div class="chat-screen" id="chatScreen" style="display: none;">
+                <!-- Messages Container -->
+                <div class="messages-container" id="messagesContainer">
+                    <div class="system-message">
+                        <p>🔒 SecureChat connected. Your messages are private.</p>
                     </div>
                 </div>
 
-                <div class="chat-container">
-                    <!-- Messages Container -->
-                    <div class="messages-container" id="messagesContainer">
-                        <div class="welcome-message">
-                            <p>💬 Welcome to Secure Chat! Connect with other security professionals.</p>
-                        </div>
-                    </div>
-
-                    <!-- Message Input -->
-                    <div class="message-input-container">
-                        <input type="text" id="messageInput" placeholder="Type your message..." maxlength="500">
-                        <button id="sendMessageBtn" class="btn-primary">
-                            Send
-                        </button>
-                    </div>
+                <!-- Message Input -->
+                <div class="input-container">
+                    <input type="text" id="messageInput" placeholder="Type a message..." maxlength="1000">
+                    <button class="send-btn" id="sendBtn">Send</button>
                 </div>
-
-                <!-- Online Users -->
-                <div class="online-users">
-                    <h4>Online Users</h4>
-                    <div id="usersList" class="users-list">
-                        <!-- Users will appear here -->
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
 
-        <!-- Login Modal -->
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <h2>Join SecurityChat Pro</h2>
-                <input type="text" id="usernameInput" placeholder="Choose your username" maxlength="20">
-                <div class="modal-actions">
-                    <button class="btn-primary" id="joinChatBtn">Join Chat</button>
-                    <button class="btn-secondary" data-close-modal="loginModal">Cancel</button>
-                </div>
-            </div>
-        </div>
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-tab="chats">
+                <span>💬</span>
+                <span>Chats</span>
+            </button>
+            <button class="nav-btn" data-tab="tools">
+                <span>🛠</span>
+                <span>Tools</span>
+            </button>
+            <button class="nav-btn" data-tab="status">
+                <span>🔍</span>
+                <span>Status</span>
+            </button>
+            <button class="nav-btn" data-tab="calls">
+                <span>📞</span>
+                <span>Calls</span>
+            </button>
+        </nav>
+    </div>
 
-        <!-- Payment Modal -->
-        <div id="paymentModal" class="modal">
-            <div class="modal-content">
-                <span class="close" data-close-modal="paymentModal">&times;</span>
-                <div id="paymentContent">
-                    <!-- Payment content loaded here -->
-                </div>
+    <!-- Tools Modal -->
+    <div class="modal" id="toolsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Security Tools</h2>
+                <button class="close-btn" id="closeToolsBtn">×</button>
             </div>
-        </div>
-
-        <!-- Install Prompt -->
-        <div id="installPrompt" class="install-prompt">
-            <div class="prompt-content">
-                <p>📱 Install SecurityChat Pro for better experience</p>
-                <button id="installBtn" class="btn-primary">Install App</button>
-                <button class="btn-secondary" data-close-modal="installPrompt">Not Now</button>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">🔍</div>
+                    <h3>Port Scanner</h3>
+                    <p>Scan networks for open ports</p>
+                    <button class="tool-btn" data-tool="port-scanner">Unlock - KSH 199</button>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🌐</div>
+                    <h3>Network Analyzer</h3>
+                    <p>Comprehensive network analysis</p>
+                    <button class="tool-btn" data-tool="network-analyzer">Unlock - KSH 299</button>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔑</div>
+                    <h3>Hash Generator</h3>
+                    <p>Cryptographic hashing tools</p>
+                    <button class="tool-btn" data-tool="hash-generator">Unlock - KSH 99</button>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🛡</div>
+                    <h3>XSS Scanner</h3>
+                    <p>Web vulnerability detection</p>
+                    <button class="tool-btn" data-tool="xss-scanner">Unlock - KSH 249</button>
+                </div>
+                <div class="tool-card featured">
+                    <div class="tool-icon">🎁</div>
+                    <h3>Complete Bundle</h3>
+                    <p>All tools + Premium features</p>
+                    <button class="tool-btn primary" data-tool="bundle">Get Bundle - KSH 499</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="paymentTitle">Unlock Tool</h2>
+                <button class="close-btn" id="closePaymentBtn">×</button>
+            </div>
+            <div class="payment-content" id="paymentContent">
+                <!-- Payment details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <div class="prompt-content">
+            <div class="prompt-icon">📱</div>
+            <div class="prompt-text">
+                <h4>Install SecureChat</h4>
+                <p>Get the best experience with our app</p>
+            </div>
+            <div class="prompt-actions">
+                <button class="primary-btn" id="installBtn">Install</button>
+                <button class="secondary-btn" id="dismissInstallBtn">Not Now</button>
+            </div>
+        </div>
+    </div>
+
     <script src="assets/js/app.js"></script>
 </body>
 </html>
