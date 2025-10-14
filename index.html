@@ -3,253 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Toolkit Pro - Premium Cybersecurity Tools</title>
+    <title>SecurityChat Pro - Tools & Messaging</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6B35">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="animated-bg"></div>
-    
-    <div class="container">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="nav-brand">
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
                 <div class="logo">⚡</div>
-                <span class="brand-text">Security Toolkit <span class="pro-badge">PRO</span></span>
-            </div>
-            <div class="nav-actions">
-                <button class="nav-btn" onclick="showBundleOffer()">
-                    <span>💎</span>
-                    Get Bundle
-                </button>
-            </div>
-        </nav>
-
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <div class="hero-badge">🔥 PREMIUM TOOLS</div>
-                <h1 class="hero-title">
-                    Enterprise <span class="gradient-text">Security Tools</span> 
-                    <br>For Professionals
-                </h1>
-                <p class="hero-subtitle">
-                    Advanced cybersecurity toolkit trusted by <strong>24+ security teams</strong>. 
-                    Everything you need for penetration testing, network analysis, and digital forensics.
-                </p>
-                
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-number">24+</div>
-                        <div class="stat-label">Active Teams</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">8</div>
-                        <div class="stat-label">Premium Tools</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">99%</div>
-                        <div class="stat-label">Success Rate</div>
-                    </div>
+                <h1>SecurityChat Pro</h1>
+                <div class="user-info">
+                    <span id="usernameDisplay">Guest</span>
+                    <button id="loginBtn" class="btn-secondary">Login</button>
                 </div>
+            </div>
+        </header>
 
-                <div class="hero-actions">
-                    <button class="cta-primary" onclick="scrollToSection('tools')">
-                        🚀 Explore Tools
-                    </button>
-                    <button class="cta-secondary" onclick="showBundleOffer()">
-                        💎 Get Bundle Deal
+        <!-- Main App -->
+        <main class="app-main">
+            <!-- Tools Section -->
+            <section id="toolsSection" class="section active">
+                <div class="section-header">
+                    <h2>Security Tools</h2>
+                    <button class="btn-primary" onclick="switchSection('chatSection')">
+                        💬 Open Chat
                     </button>
                 </div>
-            </div>
-            
-            <div class="hero-visual">
-                <div class="floating-tool">
-                    <div class="tool-preview">🔍</div>
-                    <span>Port Scanner</span>
-                </div>
-                <div class="floating-tool">
-                    <div class="tool-preview">🛡</div>
-                    <span>XSS Scanner</span>
-                </div>
-                <div class="floating-tool">
-                    <div class="tool-preview">🔑</div>
-                    <span>Hash Generator</span>
-                </div>
-            </div>
-        </section>
 
-        <!-- Features -->
-        <section class="features">
-            <div class="section-header">
-                <h2>Why Security Teams Choose Us</h2>
-                <p>Professional tools built for enterprise security requirements</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Lightning Fast</h3>
-                    <p>Optimized algorithms deliver results in seconds, not minutes</p>
+                <div class="tools-grid" id="toolsGrid">
+                    <!-- Tools will be loaded here -->
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Enterprise Ready</h3>
-                    <p>Used by security teams in Fortune 500 companies</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3>Always Updated</h3>
-                    <p>Regular updates with latest security techniques</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Precision Results</h3>
-                    <p>Accurate scanning and analysis with minimal false positives</p>
-                </div>
-            </div>
-        </section>
 
-        <!-- Tools Section -->
-        <section id="tools" class="tools-section">
-            <div class="section-header">
-                <h2>Premium Security Tools</h2>
-                <p>Unlock individual tools or get complete bundle access</p>
-            </div>
-
-            <div class="tools-grid" id="toolsGrid">
-                <!-- Tools loaded by JavaScript -->
-            </div>
-
-            <!-- Bundle Card -->
-            <div class="bundle-card">
-                <div class="bundle-header">
-                    <div class="bundle-badge">🔥 MOST POPULAR</div>
-                    <h3>Complete Security Toolkit Bundle</h3>
-                    <p>Get ALL 8 premium tools + future updates</p>
-                </div>
-                <div class="bundle-content">
-                    <div class="bundle-price">
-                        <div class="price-main">KSH 499<span>/month</span></div>
-                        <div class="price-save">Save 68% vs individual tools</div>
+                <!-- Bundle Offer -->
+                <div class="bundle-card">
+                    <div class="bundle-content">
+                        <h3>Complete Toolkit + Messaging</h3>
+                        <p>Get all tools and unlimited messaging access</p>
+                        <div class="price">KSH 499<span>/month</span></div>
+                        <button class="btn-primary" onclick="showBundleOffer()">
+                            💎 Get Full Access
+                        </button>
                     </div>
-                    <ul class="bundle-features">
-                        <li>✅ All 8 premium tools unlocked</li>
-                        <li>✅ Unlimited usage & exports</li>
-                        <li>✅ Priority email support</li>
-                        <li>✅ Early access to new tools</li>
-                        <li>✅ Team management features</li>
-                        <li>✅ Regular security updates</li>
-                    </ul>
-                    <button class="bundle-btn" onclick="showBundleOffer()">
-                        💎 Get Complete Bundle
+                </div>
+            </section>
+
+            <!-- Chat Section -->
+            <section id="chatSection" class="section">
+                <div class="chat-header">
+                    <button class="btn-secondary" onclick="switchSection('toolsSection')">
+                        ← Back to Tools
                     </button>
+                    <h3>Secure Messaging</h3>
+                    <div class="online-indicator">
+                        <span id="onlineCount">0</span> online
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Testimonials -->
-        <section class="testimonials">
-            <div class="section-header">
-                <h2>Trusted by Security Experts</h2>
-                <p>What professionals say about our toolkit</p>
-            </div>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "The port scanner is incredibly accurate. Saved our team hours of manual work."
+                <div class="chat-container">
+                    <!-- Messages Container -->
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="welcome-message">
+                            <p>💬 Welcome to Secure Chat! Connect with other security professionals.</p>
+                        </div>
                     </div>
-                    <div class="testimonial-author">
-                        <strong>Alex M.</strong>
-                        <span>Security Analyst</span>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "Essential for our penetration testing workflow. Worth every shilling!"
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>Sarah K.</strong>
-                        <span>Penetration Tester</span>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "The bundle deal is incredible value. All tools work seamlessly together."
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>Mike T.</strong>
-                        <span>Network Engineer</span>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- FAQ -->
-        <section class="faq">
-            <div class="section-header">
-                <h2>Frequently Asked Questions</h2>
-            </div>
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h3>How does payment work?</h3>
-                    <p>Send KSH via M-Pesa to 254117702463, then WhatsApp your Payment ID for instant activation.</p>
+                    <!-- Message Input -->
+                    <div class="message-input-container">
+                        <input type="text" id="messageInput" placeholder="Type your message..." maxlength="500">
+                        <button id="sendMessageBtn" class="btn-primary">
+                            Send
+                        </button>
+                    </div>
                 </div>
-                <div class="faq-item">
-                    <h3>How long does activation take?</h3>
-                    <p>Most accounts are activated within 15 minutes during business hours.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Can I cancel anytime?</h3>
-                    <p>Yes! Monthly bundle subscriptions can be cancelled anytime.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Is there technical support?</h3>
-                    <p>Yes! Priority email support included with all purchases.</p>
-                </div>
-            </div>
-        </section>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="logo">⚡</div>
-                    <div>
-                        <div class="brand-text">Security Toolkit PRO</div>
-                        <p class="footer-subtitle">Powered by Kipkoech Emmanuel</p>
+                <!-- Online Users -->
+                <div class="online-users">
+                    <h4>Online Users</h4>
+                    <div id="usersList" class="users-list">
+                        <!-- Users will appear here -->
                     </div>
                 </div>
-                <div class="footer-contact">
-                    <h4>Contact & Support</h4>
-                    <div class="contact-info">
-                        <a href="https://wa.me/254117702463" class="contact-link">
-                            📱 WhatsApp: 254117702463
-                        </a>
-                        <a href="mailto:kipkoechryan@gmail.com" class="contact-link">
-                            ✉ Email: kipkoechryan@gmail.com
-                        </a>
-                    </div>
+            </section>
+        </main>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <h2>Join SecurityChat Pro</h2>
+                <input type="text" id="usernameInput" placeholder="Choose your username" maxlength="20">
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="joinChat()">Join Chat</button>
+                    <button class="btn-secondary" onclick="closeModal('loginModal')">Cancel</button>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Security Toolkit PRO. All rights reserved. | Powered by Kipkoech Emmanuel</p>
-            </div>
-        </footer>
+        </div>
     </div>
 
     <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
+    <div id="paymentModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
+            <span class="close" onclick="closeModal('paymentModal')">&times;</span>
             <div id="paymentContent">
                 <!-- Payment content loaded here -->
             </div>
         </div>
     </div>
 
+    <!-- Install Prompt -->
+    <div id="installPrompt" class="install-prompt">
+        <div class="prompt-content">
+            <p>📱 Install SecurityChat Pro for better experience</p>
+            <button id="installBtn" class="btn-primary">Install App</button>
+            <button onclick="closeInstallPrompt()" class="btn-secondary">Not Now</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
     <script src="assets/js/app.js"></script>
 </body>
 </html>
