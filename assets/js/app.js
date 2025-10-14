@@ -1,4 +1,9 @@
 // SecurityChat Pro - Real-time Messaging & Security Tools
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the app
+    window.securityChat = new SecurityChatApp();
+});
+
 class SecurityChatApp {
     constructor() {
         this.socket = null;
@@ -9,6 +14,7 @@ class SecurityChatApp {
     }
 
     init() {
+        console.log('🚀 Initializing SecurityChat Pro...');
         this.loadTools();
         this.setupEventListeners();
         this.setupServiceWorker();
@@ -18,8 +24,9 @@ class SecurityChatApp {
 
     // Socket.IO Real-time Messaging
     connectToChat(username) {
+        console.log('Connecting to chat as:', username);
+        
         // For demo purposes, we'll simulate real-time messaging
-        // In production, you'd connect to a real Socket.IO server
         this.socket = {
             emit: (event, data) => {
                 console.log('Emitting:', event, data);
@@ -39,6 +46,9 @@ class SecurityChatApp {
         this.isConnected = true;
         this.updateUI();
         this.addSystemMessage(${username} joined the chat);
+        this.updateOnlineUsers();
+        
+        console.log('✅ Successfully connected to chat');
     }
 
     handleLocalMessage(data) {
@@ -54,7 +64,11 @@ class SecurityChatApp {
     }
 
     sendMessage(text) {
-        if (!this.isConnected || !text.trim()) return;
+        console.log('Sending message:', text);
+        if (!this.isConnected || !text.trim()) {
+            console.log('❌ Cannot send message - not connected or empty');
+            return;
+        }
 
         const messageData = {
             id: this.generateId(),
@@ -65,6 +79,9 @@ class SecurityChatApp {
         };
 
         this.displayMessage(messageData);
+        
+        // Clear input
+        document.getElementById('messageInput').value = '';
         
         // Simulate other users responding
         setTimeout(() => {
@@ -99,6 +116,11 @@ class SecurityChatApp {
 
     displayMessage(message) {
         const messagesContainer = document.getElementById('messagesContainer');
+        if (!messagesContainer) {
+            console.error('❌ messagesContainer not found');
+            return;
+        }
+
         const messageElement = document.createElement('div');
         messageElement.className = message ${message.type};
         messageElement.innerHTML = `
@@ -113,15 +135,19 @@ class SecurityChatApp {
 
     addSystemMessage(text) {
         const messagesContainer = document.getElementById('messagesContainer');
+        if (!messagesContainer) return;
+
         const messageElement = document.createElement('div');
         messageElement.className = 'message system';
         messageElement.style.cssText = `
             align-self: center;
             background: rgba(255, 255, 255, 0.1);
-            color: var(--text-light);
+            color: #a0aec0;
             font-style: italic;
             text-align: center;
             max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 10px;
         `;
         messageElement.textContent = text;
         
@@ -133,13 +159,15 @@ class SecurityChatApp {
         const usersList = document.getElementById('usersList');
         const onlineCount = document.getElementById('onlineCount');
         
+        if (!usersList || !onlineCount) return;
+
         // Simulate online users
         const simulatedUsers = [
             'CyberSec_Expert',
             'NetworkGuard',
             'CodeProtector',
             'DataShield',
-            this.currentUser.username
+            ...(this.currentUser ? [this.currentUser.username] : [])
         ].filter((user, index, array) => array.indexOf(user) === index);
 
         onlineCount.textContent = simulatedUsers.length;
@@ -156,6 +184,8 @@ class SecurityChatApp {
         const usernameDisplay = document.getElementById('usernameDisplay');
         const loginBtn = document.getElementById('loginBtn');
         
+        if (!usernameDisplay || !loginBtn) return;
+
         if (this.isConnected && this.currentUser) {
             usernameDisplay.textContent = this.currentUser.username;
             loginBtn.textContent = 'Logout';
@@ -168,18 +198,24 @@ class SecurityChatApp {
     }
 
     logout() {
+        console.log('Logging out...');
         this.isConnected = false;
         this.currentUser = null;
         this.socket = null;
         this.updateUI();
         this.showLoginModal();
+        this.addSystemMessage('You left the chat');
     }
 
     // Tools Management
     loadTools() {
         const toolsGrid = document.getElementById('toolsGrid');
-        const toolsData = this.getToolsData();
+        if (!toolsGrid) {
+            console.error('❌ toolsGrid not found');
+            return;
+        }
 
+        const toolsData = this.getToolsData();
         toolsGrid.innerHTML = toolsData.map(tool => `
             <div class="tool-card ${tool.locked ? 'locked' : ''}">
                 <div class="tool-header">
@@ -190,11 +226,19 @@ class SecurityChatApp {
                 <ul class="tool-features">
                     ${tool.features.map(feature => <li>${feature}</li>).join('')}
                 </ul>
-                <button class="btn-primary" onclick="securityChat.showPaymentModal(${tool.id})">
+                <button class="btn-primary" data-tool-id="${tool.id}">
                     🔓 Unlock for ${tool.price}
                 </button>
             </div>
         `).join('');
+
+        // Add event listeners to tool buttons
+        toolsGrid.querySelectorAll('[data-tool-id]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const toolId = parseInt(e.target.getAttribute('data-tool-id'));
+                this.showPaymentModal(toolId);
+            });
+        });
     }
 
     getToolsData() {
@@ -240,12 +284,21 @@ class SecurityChatApp {
 
     // Payment System
     showPaymentModal(toolId) {
+        console.log('Showing payment modal for tool:', toolId);
         const tool = this.getToolsData().find(t => t.id === toolId);
-        if (!tool) return;
+        if (!tool) {
+            console.error('❌ Tool not found:', toolId);
+            return;
+        }
 
         const paymentId = this.generatePaymentId();
         const paymentContent = document.getElementById('paymentContent');
         
+        if (!paymentContent) {
+            console.error('❌ paymentContent not found');
+            return;
+        }
+
         paymentContent.innerHTML = `
             <h2>${tool.icon} ${tool.name}</h2>
             <p>${tool.description}</p>
@@ -253,33 +306,47 @@ class SecurityChatApp {
             <div class="payment-option">
                 <h3>Unlock Tool + Chat Access</h3>
                 <div style="text-align: center; margin: 20px 0;">
-                    <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">${tool.price}</div>
-                    <div style="color: var(--text-light);">One-time payment • Lifetime access</div>
+                    <div style="font-size: 2rem; font-weight: 800; color: #FF6B35;">${tool.price}</div>
+                    <div style="color: #a0aec0;">One-time payment • Lifetime access</div>
                 </div>
                 
                 <p><strong>Payment ID:</strong></p>
                 <div class="payment-id">${paymentId}</div>
                 
                 <p><strong>Instructions:</strong></p>
-                <ol style="text-align: left; color: var(--text-light); line-height: 1.6;">
+                <ol style="text-align: left; color: #a0aec0; line-height: 1.6;">
                     <li>Send ${tool.price} via M-Pesa to: <strong>254117702463</strong></li>
                     <li>WhatsApp this code: <strong>${paymentId}</strong></li>
                     <li>We'll activate within 15 minutes</li>
                 </ol>
                 
-                <button class="btn-primary" onclick="securityChat.copyToClipboard('${paymentId}')" style="width: 100%; margin-top: 15px;">
+                <button class="btn-primary" id="copyPaymentBtn" style="width: 100%; margin-top: 15px;">
                     📋 Copy Payment ID
                 </button>
             </div>
         `;
 
+        // Add event listener to copy button
+        const copyBtn = document.getElementById('copyPaymentBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                this.copyToClipboard(paymentId);
+            });
+        }
+
         this.showModal('paymentModal');
     }
 
     showBundleOffer() {
+        console.log('Showing bundle offer');
         const paymentId = this.generatePaymentId();
         const paymentContent = document.getElementById('paymentContent');
         
+        if (!paymentContent) {
+            console.error('❌ paymentContent not found');
+            return;
+        }
+
         paymentContent.innerHTML = `
             <h2>🎁 Complete Bundle</h2>
             <p>All tools + Unlimited messaging + Priority support</p>
@@ -287,15 +354,15 @@ class SecurityChatApp {
             <div class="payment-option">
                 <h3>Full Platform Access</h3>
                 <div style="text-align: center; margin: 20px 0;">
-                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">KSH 499</div>
-                    <div style="color: var(--success); font-weight: 600;">Save 60% vs individual tools</div>
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #FF6B35;">KSH 499</div>
+                    <div style="color: #48bb78; font-weight: 600;">Save 60% vs individual tools</div>
                 </div>
                 
                 <p><strong>Payment ID:</strong></p>
                 <div class="payment-id">${paymentId}</div>
                 
                 <p><strong>What you get:</strong></p>
-                <ul style="text-align: left; color: var(--text-light); line-height: 1.6;">
+                <ul style="text-align: left; color: #a0aec0; line-height: 1.6;">
                     <li>✅ All security tools unlocked</li>
                     <li>✅ Unlimited real-time messaging</li>
                     <li>✅ Priority technical support</li>
@@ -303,11 +370,19 @@ class SecurityChatApp {
                     <li>✅ Cancel anytime</li>
                 </ul>
                 
-                <button class="btn-primary" onclick="securityChat.copyToClipboard('${paymentId}')" style="width: 100%; margin-top: 15px;">
+                <button class="btn-primary" id="copyBundleBtn" style="width: 100%; margin-top: 15px;">
                     📋 Copy Payment ID
                 </button>
             </div>
         `;
+
+        // Add event listener to copy button
+        const copyBtn = document.getElementById('copyBundleBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                this.copyToClipboard(paymentId);
+            });
+        }
 
         this.showModal('paymentModal');
     }
@@ -333,12 +408,40 @@ class SecurityChatApp {
     copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
             this.showNotification('✅ Payment ID copied to clipboard!');
+        }).catch((err) => {
+            console.error('❌ Failed to copy:', err);
+            // Fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            this.showNotification('✅ Payment ID copied to clipboard!');
         });
     }
 
     showNotification(message) {
-        // Simple notification implementation
-        alert(message);
+        // Create a simple notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 3000);
     }
 
     // UI Management
@@ -347,45 +450,63 @@ class SecurityChatApp {
     }
 
     showModal(modalId) {
-        document.getElementById(modalId).style.display = 'block';
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        } else {
+            console.error('❌ Modal not found:', modalId);
+        }
     }
 
     closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
 
     switchSection(sectionId) {
+        console.log('Switching to section:', sectionId);
         document.querySelectorAll('.section').forEach(section => {
             section.classList.remove('active');
         });
-        document.getElementById(sectionId).classList.add('active');
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        } else {
+            console.error('❌ Section not found:', sectionId);
+        }
     }
 
     joinChat() {
         const usernameInput = document.getElementById('usernameInput');
+        if (!usernameInput) {
+            console.error('❌ usernameInput not found');
+            return;
+        }
+
         const username = usernameInput.value.trim();
         
         if (!username) {
-            alert('Please enter a username');
+            this.showNotification('Please enter a username');
             return;
         }
 
         if (username.length < 3) {
-            alert('Username must be at least 3 characters');
+            this.showNotification('Username must be at least 3 characters');
             return;
         }
 
         this.connectToChat(username);
         this.closeModal('loginModal');
-        this.updateOnlineUsers();
     }
 
     // PWA Features
     setupServiceWorker() {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
-                .then(registration => console.log('SW registered'))
-                .catch(error => console.log('SW registration failed'));
+                .then(registration => console.log('✅ SW registered'))
+                .catch(error => console.log('❌ SW registration failed:', error));
         }
     }
 
@@ -399,12 +520,16 @@ class SecurityChatApp {
 
     showInstallPrompt() {
         const installPrompt = document.getElementById('installPrompt');
-        installPrompt.style.display = 'block';
+        if (installPrompt) {
+            installPrompt.style.display = 'block';
+        }
     }
 
     closeInstallPrompt() {
         const installPrompt = document.getElementById('installPrompt');
-        installPrompt.style.display = 'none';
+        if (installPrompt) {
+            installPrompt.style.display = 'none';
+        }
     }
 
     async installApp() {
@@ -421,28 +546,61 @@ class SecurityChatApp {
     }
 
     setupEventListeners() {
+        console.log('Setting up event listeners...');
+        
         // Message sending
         const messageInput = document.getElementById('messageInput');
         const sendMessageBtn = document.getElementById('sendMessageBtn');
 
-        const sendMessage = () => {
-            this.sendMessage(messageInput.value);
-            messageInput.value = '';
-        };
+        if (messageInput && sendMessageBtn) {
+            const sendMessage = () => {
+                this.sendMessage(messageInput.value);
+            };
 
-        sendMessageBtn.addEventListener('click', sendMessage);
-        
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+            sendMessageBtn.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        } else {
+            console.error('❌ Message input elements not found');
+        }
 
         // Install app
         const installBtn = document.getElementById('installBtn');
         if (installBtn) {
             installBtn.addEventListener('click', () => this.installApp());
         }
+
+        // Bundle button
+        const bundleBtn = document.querySelector('.bundle-content .btn-primary');
+        if (bundleBtn) {
+            bundleBtn.addEventListener('click', () => this.showBundleOffer());
+        }
+
+        // Section switching buttons
+        const openChatBtn = document.querySelector('[onclick*="chatSection"]');
+        const backToToolsBtn = document.querySelector('[onclick*="toolsSection"]');
+        
+        if (openChatBtn) {
+            openChatBtn.addEventListener('click', () => this.switchSection('chatSection'));
+        }
+        if (backToToolsBtn) {
+            backToToolsBtn.addEventListener('click', () => this.switchSection('toolsSection'));
+        }
+
+        // Modal close buttons
+        const closeModalBtns = document.querySelectorAll('.close, [onclick*="closeModal"]');
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
 
         // Close modals on outside click
         window.addEventListener('click', (event) => {
@@ -453,32 +611,51 @@ class SecurityChatApp {
                 }
             });
         });
+
+        // Login form
+        const loginForm = document.querySelector('#loginModal input');
+        if (loginForm) {
+            loginForm.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.joinChat();
+                }
+            });
+        }
+
+        console.log('✅ Event listeners setup complete');
     }
 }
 
 // Global functions for HTML onclick attributes
-function switchSection(sectionId) {
-    securityChat.switchSection(sectionId);
+window.switchSection = function(sectionId) {
+    if (window.securityChat) {
+        window.securityChat.switchSection(sectionId);
+    }
 }
 
-function showBundleOffer() {
-    securityChat.showBundleOffer();
+window.showBundleOffer = function() {
+    if (window.securityChat) {
+        window.securityChat.showBundleOffer();
+    }
 }
 
-function joinChat() {
-    securityChat.joinChat();
+window.joinChat = function() {
+    if (window.securityChat) {
+        window.securityChat.joinChat();
+    }
 }
 
-function closeModal(modalId) {
-    securityChat.closeModal(modalId);
+window.closeModal = function(modalId) {
+    if (window.securityChat) {
+        window.securityChat.closeModal(modalId);
+    }
 }
 
-function closeInstallPrompt() {
-    securityChat.closeInstallPrompt();
+window.closeInstallPrompt = function() {
+    if (window.securityChat) {
+        window.securityChat.closeInstallPrompt();
+    }
 }
 
-// Initialize the app
-let securityChat;
-document.addEventListener('DOMContentLoaded', function() {
-    securityChat = new SecurityChatApp();
-});
+// Make functions available globally
+window.securityChatApp = SecurityChatApp;
