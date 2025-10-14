@@ -181,7 +181,9 @@ function loadTools() {
     `).join('');
 }
 
-function showPaymentModal(toolId) {
+// FIXED: Make sure this function is available globally
+window.showPaymentModal = function(toolId) {
+    console.log('Button clicked for tool:', toolId);
     const tool = toolsData.find(t => t.id === toolId);
     
     if (!tool) {
@@ -240,7 +242,9 @@ function showPaymentModal(toolId) {
     document.getElementById('paymentModal').style.display = 'block';
 }
 
-function showBundleOffer() {
+// FIXED: Make sure this function is available globally
+window.showBundleOffer = function() {
+    console.log('Bundle button clicked!');
     const paymentId = generatePaymentId();
     const totalIndividual = toolsData.reduce((sum, tool) => sum + parseInt(tool.price.replace('KSH ', '')), 0);
     const bundlePrice = 499;
@@ -312,12 +316,11 @@ function generatePaymentId() {
     return result;
 }
 
-function copyToClipboard(text) {
+// FIXED: Make sure this function is available globally
+window.copyToClipboard = function(text) {
     navigator.clipboard.writeText(text).then(() => {
-        // Show custom notification
         showNotification('✅ Payment ID copied to clipboard! Paste it in your WhatsApp message.');
     }).catch(() => {
-        // Fallback for older browsers
         const textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
@@ -329,7 +332,6 @@ function copyToClipboard(text) {
 }
 
 function showNotification(message) {
-    // Create notification element
     const notification = document.createElement('div');
     notification.style.cssText = `
         position: fixed;
@@ -348,13 +350,42 @@ function showNotification(message) {
     
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => {
             document.body.removeChild(notification);
         }, 300);
     }, 3000);
+}
+
+// FIXED: Make sure this function is available globally
+window.scrollToSection = function(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function setupEventListeners() {
+    const closeModal = document.getElementById('closeModal');
+    if (closeModal) {
+        closeModal.addEventListener('click', function() {
+            document.getElementById('paymentModal').style.display = 'none';
+        });
+    }
+    
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('paymentModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+    });
 }
 
 // Add CSS for notifications
@@ -371,38 +402,6 @@ notificationStyles.textContent = `
 `;
 document.head.appendChild(notificationStyles);
 
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function setupEventListeners() {
-    // Close modal when clicking X
-    const closeModal = document.getElementById('closeModal');
-    if (closeModal) {
-        closeModal.addEventListener('click', function() {
-            document.getElementById('paymentModal').style.display = 'none';
-        });
-    }
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('paymentModal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            document.getElementById('paymentModal').style.display = 'none';
-        }
-    });
-}
-
 // Add smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -418,3 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// FIXED: Make all functions available globally
+window.generatePaymentId = generatePaymentId;
+window.showNotification = showNotification;
