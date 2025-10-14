@@ -1,0 +1,10 @@
+{
+  "name": "Security Toolkit - Skydaddy's Tech Arena",
+  "short_name": "Security Toolkit",
+  "description": "Premium cybersecurity tools for professionals",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3c72",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait-primary"
+}
