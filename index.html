@@ -30,7 +30,7 @@
             <section id="toolsSection" class="section active">
                 <div class="section-header">
                     <h2>Security Tools</h2>
-                    <button class="btn-primary" onclick="switchSection('chatSection')">
+                    <button class="btn-primary" id="openChatBtn">
                         💬 Open Chat
                     </button>
                 </div>
@@ -45,7 +45,7 @@
                         <h3>Complete Toolkit + Messaging</h3>
                         <p>Get all tools and unlimited messaging access</p>
                         <div class="price">KSH 499<span>/month</span></div>
-                        <button class="btn-primary" onclick="showBundleOffer()">
+                        <button class="btn-primary" id="bundleOfferBtn">
                             💎 Get Full Access
                         </button>
                     </div>
@@ -55,7 +55,7 @@
             <!-- Chat Section -->
             <section id="chatSection" class="section">
                 <div class="chat-header">
-                    <button class="btn-secondary" onclick="switchSection('toolsSection')">
+                    <button class="btn-secondary" id="backToToolsBtn">
                         ← Back to Tools
                     </button>
                     <h3>Secure Messaging</h3>
@@ -97,29 +97,29 @@
                 <h2>Join SecurityChat Pro</h2>
                 <input type="text" id="usernameInput" placeholder="Choose your username" maxlength="20">
                 <div class="modal-actions">
-                    <button class="btn-primary" onclick="joinChat()">Join Chat</button>
-                    <button class="btn-secondary" onclick="closeModal('loginModal')">Cancel</button>
+                    <button class="btn-primary" id="joinChatBtn">Join Chat</button>
+                    <button class="btn-secondary" data-close-modal="loginModal">Cancel</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('paymentModal')">&times;</span>
-            <div id="paymentContent">
-                <!-- Payment content loaded here -->
+        <!-- Payment Modal -->
+        <div id="paymentModal" class="modal">
+            <div class="modal-content">
+                <span class="close" data-close-modal="paymentModal">&times;</span>
+                <div id="paymentContent">
+                    <!-- Payment content loaded here -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Install Prompt -->
-    <div id="installPrompt" class="install-prompt">
-        <div class="prompt-content">
-            <p>📱 Install SecurityChat Pro for better experience</p>
-            <button id="installBtn" class="btn-primary">Install App</button>
-            <button onclick="closeInstallPrompt()" class="btn-secondary">Not Now</button>
+        <!-- Install Prompt -->
+        <div id="installPrompt" class="install-prompt">
+            <div class="prompt-content">
+                <p>📱 Install SecurityChat Pro for better experience</p>
+                <button id="installBtn" class="btn-primary">Install App</button>
+                <button class="btn-secondary" data-close-modal="installPrompt">Not Now</button>
+            </div>
         </div>
     </div>
 
