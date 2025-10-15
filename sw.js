@@ -1,4 +1,4 @@
-const CACHE_NAME = 'securechat-v1';
+const CACHE_NAME = 'security-toolkit-v1';
 const urlsToCache = [
   '/',
   '/index.html',

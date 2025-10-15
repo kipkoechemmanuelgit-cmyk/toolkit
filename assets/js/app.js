@@ -1,375 +1,355 @@
-// SecureChat App - Simple Messaging & Security Tools
-class SecureChatApp {
-    constructor() {
-        this.messages = [];
-        this.currentUser = 'You';
-        this.isConnected = true;
-        this.deferredPrompt = null;
-        this.init();
+// Security Toolkit Pro - Simple and Guaranteed Working
+console.log('🚀 Security Toolkit Pro loading...');
+
+// Tools Data
+const toolsData = [
+    {
+        id: 1,
+        name: "Port Scanner Pro",
+        icon: "🔍",
+        description: "Advanced network port scanning with real-time results",
+        features: ["TCP/UDP port scanning", "Service detection", "Export results", "Custom port ranges"],
+        price: "KSH 199",
+        locked: true
+    },
+    {
+        id: 2,
+        name: "Network Analyzer",
+        icon: "🌐",
+        description: "Comprehensive network analysis and traffic monitoring",
+        features: ["Packet analysis", "Bandwidth monitoring", "Network mapping", "Performance metrics"],
+        price: "KSH 299",
+        locked: true
+    },
+    {
+        id: 3,
+        name: "Hash Generator",
+        icon: "🔑",
+        description: "Cryptographic hashing with verification tools",
+        features: ["MD5, SHA1, SHA256", "File hashing", "Hash verification", "Batch processing"],
+        price: "KSH 99",
+        locked: true
+    },
+    {
+        id: 4,
+        name: "XSS Scanner",
+        icon: "🛡",
+        description: "Advanced Cross-Site Scripting vulnerability detection",
+        features: ["Automated scanning", "Payload generation", "Vulnerability reports", "Remediation tips"],
+        price: "KSH 249",
+        locked: true
+    },
+    {
+        id: 5,
+        name: "SQL Injection Tester",
+        icon: "💉",
+        description: "Comprehensive SQL injection vulnerability testing",
+        features: ["Error-based detection", "Blind SQLi testing", "Parameter testing", "Security reports"],
+        price: "KSH 299",
+        locked: true
+    },
+    {
+        id: 6,
+        name: "Forensic Analyzer",
+        icon: "🔎",
+        description: "Digital forensic analysis and evidence collection",
+        features: ["File system analysis", "Metadata extraction", "Timeline creation", "Evidence reporting"],
+        price: "KSH 399",
+        locked: true
+    },
+    {
+        id: 7,
+        name: "Malware Detector",
+        icon: "🦠",
+        description: "Advanced malware detection and analysis",
+        features: ["Signature scanning", "Behavioral analysis", "Sandbox testing", "Threat intelligence"],
+        price: "KSH 449",
+        locked: true
+    },
+    {
+        id: 8,
+        name: "Password Analyzer",
+        icon: "🎯",
+        description: "Enterprise password strength testing and analysis",
+        features: ["Password strength testing", "Common password detection", "Brute force estimation", "Security recommendations"],
+        price: "KSH 149",
+        locked: true
+    }
+];
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ DOM loaded, initializing app...');
+    initializeApp();
+});
+
+function initializeApp() {
+    loadTools();
+    setupEventListeners();
+    console.log('✅ App initialized successfully!');
+}
+
+function loadTools() {
+    console.log('🛠 Loading tools...');
+    const toolsGrid = document.getElementById('toolsGrid');
+    
+    if (!toolsGrid) {
+        console.error('❌ Tools grid not found!');
+        return;
     }
 
-    init() {
-        console.log('🚀 Initializing SecureChat...');
-        this.setupEventListeners();
-        this.setupServiceWorker();
-        this.setupInstallPrompt();
-        this.loadSampleMessages();
-    }
+    toolsGrid.innerHTML = toolsData.map(tool => `
+        <div class="tool-card">
+            <div class="tool-header">
+                <div class="tool-icon">${tool.icon}</div>
+                <div class="tool-title">${tool.name}</div>
+            </div>
+            <p class="tool-description">${tool.description}</p>
+            <ul class="tool-features">
+                ${tool.features.map(feature => <li>${feature}</li>).join('')}
+            </ul>
+            <button class="unlock-btn" data-tool-id="${tool.id}">
+                🔓 Unlock for ${tool.price}
+            </button>
+        </div>
+    `).join('');
 
-    setupEventListeners() {
-        console.log('🔧 Setting up event listeners...');
-        
-        // Get Started Button
-        const getStartedBtn = document.getElementById('getStartedBtn');
-        if (getStartedBtn) {
-            getStartedBtn.addEventListener('click', () => {
-                this.showChatScreen();
-            });
-        }
+    console.log('✅ Tools loaded successfully');
+}
 
-        // Tools Button
-        const toolsBtn = document.getElementById('toolsBtn');
-        if (toolsBtn) {
-            toolsBtn.addEventListener('click', () => {
-                this.showToolsModal();
-            });
-        }
-
-        // Send Message
-        const sendBtn = document.getElementById('sendBtn');
-        const messageInput = document.getElementById('messageInput');
-        
-        if (sendBtn && messageInput) {
-            const sendMessage = () => {
-                const text = messageInput.value.trim();
-                if (text) {
-                    this.sendMessage(text);
-                    messageInput.value = '';
-                }
-            };
-
-            sendBtn.addEventListener('click', sendMessage);
-            messageInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-        }
-
-        // Close Modals
-        const closeToolsBtn = document.getElementById('closeToolsBtn');
-        if (closeToolsBtn) {
-            closeToolsBtn.addEventListener('click', () => {
-                this.hideToolsModal();
-            });
-        }
-
-        const closePaymentBtn = document.getElementById('closePaymentBtn');
-        if (closePaymentBtn) {
-            closePaymentBtn.addEventListener('click', () => {
-                this.hidePaymentModal();
-            });
-        }
-
-        // Tool Buttons
-        document.querySelectorAll('.tool-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const tool = e.target.getAttribute('data-tool');
-                this.showPaymentModal(tool);
-            });
-        });
-
-        // Bottom Navigation
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const tab = e.target.closest('.nav-btn').getAttribute('data-tab');
-                this.switchTab(tab);
-            });
-        });
-
-        // Install Prompt
-        const installBtn = document.getElementById('installBtn');
-        const dismissInstallBtn = document.getElementById('dismissInstallBtn');
-        
-        if (installBtn) {
-            installBtn.addEventListener('click', () => {
-                this.installApp();
-            });
-        }
-        
-        if (dismissInstallBtn) {
-            dismissInstallBtn.addEventListener('click', () => {
-                this.hideInstallPrompt();
-            });
-        }
-
-        console.log('✅ Event listeners setup complete');
-    }
-
-    showChatScreen() {
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        const chatScreen = document.getElementById('chatScreen');
-        
-        if (welcomeScreen && chatScreen) {
-            welcomeScreen.style.display = 'none';
-            chatScreen.style.display = 'flex';
-        }
-    }
-
-    sendMessage(text) {
-        if (!text.trim()) return;
-
-        // Add user message
-        this.addMessage(this.currentUser, text, 'sent');
-        
-        // Simulate reply after 1-3 seconds
-        setTimeout(() => {
-            this.simulateReply(text);
-        }, 1000 + Math.random() * 2000);
-    }
-
-    simulateReply(userMessage) {
-        const replies = [
-            "Hey! How's it going?",
-            "I've been using the security tools here, they're amazing!",
-            "Did you try the port scanner? It's super accurate.",
-            "The bundle deal is totally worth it for all the tools.",
-            "I need help with a network scan, are you available?",
-            "This chat app is so smooth! Love the design.",
-            "Just unlocked the XSS scanner. Works like a charm!",
-            "We should collaborate on a security project sometime."
-        ];
-
-        const randomName = ['Alex', 'Sarah', 'Mike', 'Emma', 'Jordan'][Math.floor(Math.random() * 5)];
-        const randomReply = replies[Math.floor(Math.random() * replies.length)];
-        
-        this.addMessage(randomName, randomReply, 'received');
-    }
-
-    addMessage(sender, text, type) {
-        const messagesContainer = document.getElementById('messagesContainer');
-        if (!messagesContainer) return;
-
-        const messageDiv = document.createElement('div');
-        messageDiv.className = message ${type};
-        
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        messageDiv.innerHTML = `
-            ${type === 'received' ? <div class="message-sender">${sender}</div> : ''}
-            <div class="message-text">${text}</div>
-            <div class="message-time">${time}</div>
-        `;
-
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        
-        // Add to messages array
-        this.messages.push({ sender, text, type, time });
-    }
-
-    loadSampleMessages() {
-        // Add some sample messages to make it feel alive
-        setTimeout(() => {
-            this.addMessage('SecurityBot', 'Welcome to SecureChat! Type a message to start chatting.', 'received');
-        }, 1000);
-    }
-
-    showToolsModal() {
-        const toolsModal = document.getElementById('toolsModal');
-        if (toolsModal) {
-            toolsModal.style.display = 'block';
-        }
-    }
-
-    hideToolsModal() {
-        const toolsModal = document.getElementById('toolsModal');
-        if (toolsModal) {
-            toolsModal.style.display = 'none';
-        }
-    }
-
-    showPaymentModal(tool) {
-        const tools = {
-            'port-scanner': { name: 'Port Scanner', price: 'KSH 199' },
-            'network-analyzer': { name: 'Network Analyzer', price: 'KSH 299' },
-            'hash-generator': { name: 'Hash Generator', price: 'KSH 99' },
-            'xss-scanner': { name: 'XSS Scanner', price: 'KSH 249' },
-            'bundle': { name: 'Complete Bundle', price: 'KSH 499' }
-        };
-
-        const selectedTool = tools[tool];
-        if (!selectedTool) return;
-
-        const paymentId = this.generatePaymentId();
-        const paymentModal = document.getElementById('paymentModal');
-        const paymentTitle = document.getElementById('paymentTitle');
-        const paymentContent = document.getElementById('paymentContent');
-
-        if (paymentTitle) {
-            paymentTitle.textContent = Unlock ${selectedTool.name};
-        }
-
-        if (paymentContent) {
-            paymentContent.innerHTML = `
-                <div class="payment-info">
-                    <div class="payment-amount">${selectedTool.price}</div>
-                    <div class="payment-description">${selectedTool.name} - One Time Payment</div>
-                    <div class="payment-id">${paymentId}</div>
-                    <button class="primary-btn" id="copyPaymentBtn">Copy Payment ID</button>
-                </div>
-                <div class="payment-steps">
-                    <h4>Payment Instructions:</h4>
-                    <ol>
-                        <li>Send <strong>${selectedTool.price}</strong> via M-Pesa to <strong>254117702463</strong></li>
-                        <li>WhatsApp the Payment ID: <strong>${paymentId}</strong></li>
-                        <li>We'll activate your tool within 15 minutes</li>
-                        <li>You'll receive confirmation and access instructions</li>
-                    </ol>
-                </div>
-            `;
-
-            // Add copy functionality
-            const copyBtn = document.getElementById('copyPaymentBtn');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', () => {
-                    this.copyToClipboard(paymentId);
-                });
+function setupEventListeners() {
+    console.log('🔧 Setting up event listeners...');
+    
+    // Tool unlock buttons
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('unlock-btn')) {
+            const toolId = event.target.getAttribute('data-tool-id');
+            if (toolId) {
+                showPaymentModal(parseInt(toolId));
             }
         }
+    });
 
-        if (paymentModal) {
-            paymentModal.style.display = 'block';
-            this.hideToolsModal();
-        }
+    // Bundle button
+    const bundleBtn = document.getElementById('bundleBtn');
+    if (bundleBtn) {
+        bundleBtn.addEventListener('click', showBundleOffer);
+        console.log('✅ Bundle button listener added');
+    } else {
+        console.error('❌ Bundle button not found!');
     }
 
-    hidePaymentModal() {
+    // Demo button
+    const demoBtn = document.getElementById('demoBtn');
+    if (demoBtn) {
+        demoBtn.addEventListener('click', showToolsDemo);
+        console.log('✅ Demo button listener added');
+    }
+
+    // Modal close buttons
+    const closeModal = document.getElementById('closeModal');
+    if (closeModal) {
+        closeModal.addEventListener('click', hidePaymentModal);
+        console.log('✅ Close modal listener added');
+    }
+
+    const closeDemoModal = document.getElementById('closeDemoModal');
+    if (closeDemoModal) {
+        closeDemoModal.addEventListener('click', hideDemoModal);
+        console.log('✅ Close demo modal listener added');
+    }
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
         const paymentModal = document.getElementById('paymentModal');
-        if (paymentModal) {
-            paymentModal.style.display = 'none';
-        }
-    }
-
-    switchTab(tab) {
-        // Update active state
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+        const demoModal = document.getElementById('demoModal');
         
-        const activeBtn = document.querySelector([data-tab="${tab}"]);
-        if (activeBtn) {
-            activeBtn.classList.add('active');
+        if (event.target === paymentModal) {
+            hidePaymentModal();
         }
-
-        // Handle tab content
-        if (tab === 'tools') {
-            this.showToolsModal();
+        if (event.target === demoModal) {
+            hideDemoModal();
         }
-        // Add other tab handlers as needed
+    });
+
+    console.log('✅ All event listeners setup complete');
+}
+
+function showPaymentModal(toolId) {
+    console.log('💰 Showing payment modal for tool:', toolId);
+    const tool = toolsData.find(t => t.id === toolId);
+    
+    if (!tool) {
+        console.error('❌ Tool not found:', toolId);
+        return;
     }
 
-    generatePaymentId() {
-        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        let result = 'STK-';
-        for (let i = 0; i < 8; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
+    const paymentId = generatePaymentId();
+    const paymentContent = document.getElementById('paymentContent');
+    
+    if (!paymentContent) {
+        console.error('❌ Payment content element not found!');
+        return;
     }
 
-    copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            this.showNotification('✅ Payment ID copied!');
-        }).catch(() => {
-            // Fallback
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            this.showNotification('✅ Payment ID copied!');
-        });
-    }
-
-    showNotification(message) {
-        // Simple notification
-        alert(message);
-    }
-
-    // PWA Features
-    setupServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('✅ Service Worker registered');
-                })
-                .catch(error => {
-                    console.log('❌ Service Worker registration failed:', error);
-                });
-        }
-    }
-
-    setupInstallPrompt() {
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            this.deferredPrompt = e;
-            this.showInstallPrompt();
-        });
-
-        window.addEventListener('appinstalled', () => {
-            console.log('✅ App installed successfully');
-            this.hideInstallPrompt();
-            this.deferredPrompt = null;
-        });
-    }
-
-    showInstallPrompt() {
-        const installPrompt = document.getElementById('installPrompt');
-        if (installPrompt) {
-            installPrompt.style.display = 'block';
-        }
-    }
-
-    hideInstallPrompt() {
-        const installPrompt = document.getElementById('installPrompt');
-        if (installPrompt) {
-            installPrompt.style.display = 'none';
-        }
-    }
-
-    async installApp() {
-        if (this.deferredPrompt) {
-            this.deferredPrompt.prompt();
-            const { outcome } = await this.deferredPrompt.userChoice;
+    const whatsappMessage = encodeURIComponent(Hi! I want to purchase ${tool.name} for ${tool.price}. Payment ID: ${paymentId});
+    
+    paymentContent.innerHTML = `
+        <h2>${tool.icon} ${tool.name}</h2>
+        <p>${tool.description}</p>
+        
+        <div class="payment-option">
+            <h3>Unlock Premium Tool</h3>
+            <div style="text-align: center; margin: 20px 0;">
+                <div style="font-size: 2rem; font-weight: 800; color: #FF6B35;">${tool.price}</div>
+                <div style="color: #a0aec0;">One-time payment • Lifetime access</div>
+            </div>
             
-            if (outcome === 'accepted') {
-                console.log('✅ User accepted the install prompt');
-                this.hideInstallPrompt();
-            }
+            <p><strong>Your Payment ID:</strong></p>
+            <div class="payment-id">${paymentId}</div>
             
-            this.deferredPrompt = null;
-        }
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="https://wa.me/254117702463?text=${whatsappMessage}" class="whatsapp-btn" target="_blank" style="display: inline-block; margin: 10px;">
+                    💬 Purchase on WhatsApp
+                </a>
+                <button class="unlock-btn" onclick="copyToClipboard('${paymentId}')" style="margin: 10px;">
+                    📋 Copy Payment ID
+                </button>
+            </div>
+            
+            <p><strong>Payment Instructions:</strong></p>
+            <ol style="color: #a0aec0; line-height: 1.6; padding-left: 20px;">
+                <li>Send <strong>${tool.price}</strong> via M-Pesa to: <strong style="color: #FF6B35;">254117702463</strong></li>
+                <li>Click "Purchase on WhatsApp" or send Payment ID manually</li>
+                <li>We'll activate your tool within 15 minutes</li>
+                <li>You'll receive confirmation email</li>
+            </ol>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #a0aec0;">
+            <p><strong>Powered by Kipkoech Emmanuel</strong></p>
+            <p>Prefer direct chat? <a href="https://wa.me/254117702463" style="color: #25D366;">Click here to open WhatsApp</a></p>
+        </div>
+    `;
+
+    showModal();
+    console.log('✅ Payment modal shown successfully');
+}
+
+function showBundleOffer() {
+    console.log('🎁 Showing bundle offer');
+    const paymentId = generatePaymentId();
+    const paymentContent = document.getElementById('paymentContent');
+    
+    if (!paymentContent) {
+        console.error('❌ Payment content element not found!');
+        return;
+    }
+
+    const whatsappMessage = encodeURIComponent(Hi! I want to purchase the Complete Toolkit Bundle for KSH 499/month. Payment ID: ${paymentId});
+    
+    paymentContent.innerHTML = `
+        <h2>🎁 Complete Toolkit Bundle</h2>
+        <p>Get ALL 8 premium tools + unlimited access</p>
+        
+        <div class="payment-option">
+            <h3>Special Bundle Offer</h3>
+            <div style="text-align: center; margin: 20px 0;">
+                <div style="font-size: 2.5rem; font-weight: 800; color: #FF6B35;">KSH 499</div>
+                <div style="color: #48bb78; font-weight: 600;">Save 60% vs individual tools</div>
+            </div>
+            
+            <p><strong>Your Payment ID:</strong></p>
+            <div class="payment-id">${paymentId}</div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="https://wa.me/254117702463?text=${whatsappMessage}" class="whatsapp-btn" target="_blank" style="display: inline-block; margin: 10px;">
+                    💬 Get Bundle on WhatsApp
+                </a>
+                <button class="unlock-btn" onclick="copyToClipboard('${paymentId}')" style="margin: 10px;">
+                    📋 Copy Payment ID
+                </button>
+            </div>
+            
+            <p><strong>What you get:</strong></p>
+            <ul style="color: #a0aec0; line-height: 1.6;">
+                <li>✅ All 8 premium tools unlocked</li>
+                <li>✅ Unlimited usage and exports</li>
+                <li>✅ Priority WhatsApp support</li>
+                <li>✅ Early access to new tools</li>
+                <li>✅ Cancel anytime</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #a0aec0;">
+            <p><strong>Powered by Kipkoech Emmanuel</strong></p>
+            <p>Best value - Get all tools at 60% discount</p>
+        </div>
+    `;
+
+    showModal();
+    console.log('✅ Bundle offer shown successfully');
+}
+
+function showToolsDemo() {
+    console.log('🎬 Showing tools demo');
+    const demoModal = document.getElementById('demoModal');
+    if (demoModal) {
+        demoModal.style.display = 'block';
     }
 }
 
-// Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    window.secureChat = new SecureChatApp();
-    console.log('🎉 SecureChat app initialized successfully!');
-});
+function hideDemoModal() {
+    const demoModal = document.getElementById('demoModal');
+    if (demoModal) {
+        demoModal.style.display = 'none';
+    }
+}
 
-// Close modals when clicking outside
-document.addEventListener('click', function(event) {
-    const toolsModal = document.getElementById('toolsModal');
-    const paymentModal = document.getElementById('paymentModal');
-    
-    if (toolsModal && event.target === toolsModal) {
-        toolsModal.style.display = 'none';
+function showModal() {
+    const modal = document.getElementById('paymentModal');
+    if (modal) {
+        modal.style.display = 'block';
     }
-    
-    if (paymentModal && event.target === paymentModal) {
-        paymentModal.style.display = 'none';
+}
+
+function hidePaymentModal() {
+    const modal = document.getElementById('paymentModal');
+    if (modal) {
+        modal.style.display = 'none';
     }
-});
+}
+
+function generatePaymentId() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let result = 'STK-';
+    for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+// Global function for copy to clipboard
+window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert('✅ Payment ID copied to clipboard!');
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('✅ Payment ID copied to clipboard!');
+    });
+};
+
+// Make functions globally available
+window.showPaymentModal = showPaymentModal;
+window.showBundleOffer = showBundleOffer;
+window.hidePaymentModal = hidePaymentModal;
+window.showToolsDemo = showToolsDemo;
+window.hideDemoModal = hideDemoModal;
+
+console.log('🎉 Security Toolkit Pro ready! All functions are available.');
